@@ -2,11 +2,6 @@ import LinkedList from './LinkedList';
 
 let ll: LinkedList<number>;
 
-// insert: (index: number, value: T) => boolean;
-// remove: (index: number) => ILinkedList<T>;
-// reverse: () => ILinkedList<T>;
-// print: () => void;
-
 beforeEach(() => {
   ll = new LinkedList<number>();
 });
@@ -49,6 +44,11 @@ it('check unshift', () => {
 
 it('check shift', () => {
   ll.push(1);
+  expect(ll.shift()).toMatchObject({ value: 1, next: null });
+  expect(ll.head).toEqual(null);
+  expect(ll.tail).toEqual(null);
+
+  ll.push(1);
   ll.push(2);
   ll.push(3);
 
@@ -58,12 +58,16 @@ it('check shift', () => {
   expect(ll.length).toEqual(2);
 });
 
-it('check, get', () => {
+it('check get', () => {
   ll.push(1);
   ll.push(2);
   ll.push(3);
 
+  expect(ll.get(0)?.value).toEqual(1);
   expect(ll.get(1)?.value).toEqual(2);
+  expect(ll.get(2)?.value).toEqual(3);
+  expect(ll.get(-1)?.value).toEqual(undefined);
+  expect(ll.get(3)?.value).toEqual(undefined);
 });
 
 it('check set', () => {
@@ -75,6 +79,8 @@ it('check set', () => {
 
   ll.set(1, 5);
   expect(ll.get(1)?.value).toEqual(5);
+
+  expect(ll.set(3, 10)).toEqual(undefined);
 });
 
 it('check insert', () => {
@@ -84,5 +90,45 @@ it('check insert', () => {
 
   ll.insert(1, 0);
   expect(ll.length).toEqual(4);
-  expect(ll.get(0)?.next).toMatchObject(ll.get(1));
+
+  const obj1 = ll.get(0)!.next;
+  const obj2 = ll.get(1);
+
+  expect(obj1 && obj2).toBeTruthy();
+  if (obj1 && obj2) {
+    expect(obj1).toMatchObject(obj2);
+  }
+});
+
+it('check remove', () => {
+  ll.push(1);
+  ll.push(2);
+  ll.push(3);
+
+  ll.remove(1);
+
+  const obj1 = ll.get(1);
+  const obj2 = ll.tail;
+  expect(obj1 && obj2).toBeTruthy();
+
+  if (obj1 && obj2) {
+    expect(obj1).toMatchObject(obj2);
+  }
+});
+
+it('check reverse', () => {
+  ll.push(1);
+  ll.push(2);
+  ll.push(3);
+
+  ll.reverse();
+
+  expect(ll.head?.value).toEqual(3);
+  expect(ll.tail?.value).toEqual(1);
+
+  expect(ll.get(0)?.value).toEqual(3);
+  expect(ll.get(1)?.value).toEqual(2);
+  expect(ll.get(2)?.value).toEqual(1);
+
+  console.log(ll);
 });

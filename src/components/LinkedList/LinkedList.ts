@@ -10,11 +10,11 @@ interface ILinkedList<T> {
   push: (value: T) => ILinkedList<T>;
   pop: () => INode<T> | undefined;
   unshift: (value: T) => ILinkedList<T>;
-  shift: () => ILinkedList<T>;
+  shift: () => INode<T> | undefined;
   get: (index: number) => INode<T> | undefined;
   set: (index: number, value: T) => INode<T> | undefined;
   insert: (index: number, value: T) => boolean;
-  remove: (index: number) => ILinkedList<T>;
+  remove: (index: number) => boolean;
   reverse: () => ILinkedList<T>;
   print: () => void;
 }
@@ -51,7 +51,7 @@ export default class LinkedList<T> implements ILinkedList<T> {
     return printList.join(' -> ');
   }
 
-  push(value: T) {
+  push(value: T): ILinkedList<T> {
     const newNode = new ListNode(value);
 
     if (!this.head) {
@@ -96,31 +96,127 @@ export default class LinkedList<T> implements ILinkedList<T> {
     return last;
   }
 
-  unshift(value: T) {
+  unshift(value: T): ILinkedList<T> {
+    const newNode = new ListNode(value);
+    if (!this.head) {
+      this.head = newNode;
+      this.tail = newNode;
+    } else {
+      newNode.next = this.head;
+      this.head = newNode;
+    }
+    this.length += 1;
+
     return this;
   }
 
-  shift() {
-    return this;
+  shift(): INode<T> | undefined {
+    if (!this.head) {
+      return undefined;
+    }
+
+    const tmp = this.head;
+    if (this.length === 1) {
+      this.tail = null;
+      this.head = null;
+    } else {
+      this.head = this.head!.next;
+      tmp.next = null;
+    }
+
+    this.length -= 1;
+
+    return tmp;
   }
 
-  get(index: number) {
-    return undefined;
+  get(index: number): INode<T> | undefined {
+    if (index < 0 || index > this.length - 1) {
+      return undefined;
+    }
+    let tmp = this.head;
+    for (let i = 0; i < index; i++) {
+      tmp = tmp!.next;
+    }
+
+    return tmp!;
   }
 
   set(index: number, value: T) {
+    const node = this.get(index);
+    if (node) {
+      node.value = value;
+      return node;
+    }
     return undefined;
   }
 
   insert(index: number, value: T) {
-    return false;
+    if (index < 0 || index > this.length) {
+      return false;
+    }
+    if (index === this.length) {
+      this.push(value);
+      return true;
+    }
+
+    if (index === 0) {
+      this.unshift(value);
+      return true;
+    }
+
+    const newNode = new ListNode(value);
+    const tmp = this.get(index - 1);
+
+    newNode.next = tmp!.next;
+    tmp!.next = newNode;
+    this.length += 1;
+    return true;
   }
 
-  remove(index: number) {
-    return this;
+  remove(index: number): boolean {
+    if (index < 0 || index > this.length - 1) {
+      return false;
+    }
+
+    if (index === 0) {
+      this.shift();
+      return true;
+    }
+
+    if (index === this.length - 1) {
+      this.pop();
+      return true;
+    }
+
+    const before = this.get(index - 1);
+    const tmp = before!.next;
+    before!.next = tmp!.next;
+    tmp!.next = null;
+    this.length -= 1;
+
+    return true;
   }
 
-  reverse() {
+  reverse(): ILinkedList<T> {
+    if (this.length < 2) {
+      return this;
+    }
+
+    let prev = null;
+    let tmp = this.head;
+    let next: INode<T> | null = this.head!.next;
+
+    this.head = this.tail;
+    this.tail = tmp;
+
+    for (let i = 0; i < this.length; i++) {
+      tmp!.next = prev;
+
+      prev = tmp;
+      tmp = next;
+      next = next?.next ? next.next : null;
+    }
+
     return this;
   }
 }
