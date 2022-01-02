@@ -9,3 +9,8 @@ src/components/LinkedList
 ```
 src/components/DoubleLinkedList
 ```
+
+## Stack
+```
+src/components/Stack
+```
