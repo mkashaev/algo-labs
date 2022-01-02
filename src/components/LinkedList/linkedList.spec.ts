@@ -129,6 +129,4 @@ it('check reverse', () => {
   expect(ll.get(0)?.value).toEqual(3);
   expect(ll.get(1)?.value).toEqual(2);
   expect(ll.get(2)?.value).toEqual(1);
-
-  console.log(ll);
 });

@@ -16,7 +16,7 @@ interface ILinkedList<T> {
   insert: (index: number, value: T) => boolean;
   remove: (index: number) => boolean;
   reverse: () => ILinkedList<T>;
-  print: () => void;
+  print: () => string;
 }
 
 class ListNode<T> implements INode<T> {
