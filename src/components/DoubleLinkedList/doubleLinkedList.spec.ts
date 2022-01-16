@@ -46,8 +46,6 @@ it('tes get', () => {
   dll.push(2);
   dll.push(3);
 
-  console.log(dll.get(0));
-
   expect(dll.get(0)?.value).toEqual(0);
   expect(dll.get(1)?.value).toEqual(1);
   expect(dll.get(2)?.value).toEqual(2);

@@ -44,8 +44,6 @@ it('test remove-vertex', () => {
   g.addEdge('B', 'D');
   g.addEdge('C', 'D');
 
-  console.log(g.adjacencyList);
-
   expect(g.adjacencyList).toMatchObject({
     A: ['B', 'C', 'D'],
     B: ['A', 'D'],
